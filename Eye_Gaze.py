@@ -1,10 +1,17 @@
 import cv2 as cv
 import numpy as np
 import dlib 
+import os
 
 cap = cv.VideoCapture(1) #camera 0->rear, 1->front
 detector = dlib.get_frontal_face_detector() #build in detector to detect the 4 corner points of the face
-predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")# predicts the facial landmark points 0 to 67
+
+file_name = "shape_predictor_68_face_landmarks.dat" #file with landmark data
+path_parent = os.path.dirname(os.getcwd()) #gets the path to one directory up
+os.chdir(path_parent) #changes working directory to path_parent this has to be done so that the next line can locate the landmark data file
+predictor = dlib.shape_predictor(file_name) #predicts the facial landmark points 0 to 67
+
+
 
 #midpoint calculation function
 def midpoint(p1 ,p2):
