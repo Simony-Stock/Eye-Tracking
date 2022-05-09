@@ -6,7 +6,7 @@ import os
 path_parent = os.path.dirname(os.getcwd()) #gets the path to one directory up
 os.chdir(path_parent) #changes working directory to path_parent
 
-cap = cv.VideoCapture(1) #camera 0->rear, 1->front
+cap = cv.VideoCapture("Eye Movement.mp4") #camera 0->rear, 1->front
 detector = dlib.get_frontal_face_detector() #build in detector to detect the 4 corner points of the face
 
 file_name = "shape_predictor_68_face_landmarks.dat" #file with landmark data
@@ -37,13 +37,24 @@ while True:
     ymin=min(Leye[0][1], Leye[1][1], Leye[2][1], Leye[3][1], Leye[4][1], Leye[5][1])
     
 
-    leftEye= frame [ymin:ymax,xmin:xmax]
+    leftEye = frame [ymin:ymax,xmin:xmax]
     leftEye = cv.cvtColor(leftEye, cv.COLOR_BGR2GRAY)
     leftEye = cv.GaussianBlur(leftEye, (5,5), 0)
 
-    Lret, Lthresh= cv.threshold(leftEye, 90, 255, cv.THRESH_BINARY_INV)  
+    Lret, Lthresh= cv.threshold(leftEye, 30, 255, cv.THRESH_BINARY_INV)  
     Lcontours, Lhierarchy = cv.findContours(Lthresh, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     Lcontours = sorted(Lcontours, key=lambda x: cv.contourArea(x), reverse=True)
+
+    #creating axes
+    (x,y,w,h) = cv.boundingRect(leftEye)
+    x=x+xmin
+    y=y+ymin
+
+    #creats blue outline box
+    cv.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 0), 1)
+    #creats white cross hairs
+    cv.line(frame, (x + int(w/2), y + int(h)), (x + int(w/2), y ), (255, 255, 255), 1)
+    cv.line(frame, (x + int(w), y + int(h/2)), (x , y + int(h/2)), (255, 255, 255), 1)
 
     #lines locating pupils
     for cnt in Lcontours:
@@ -51,9 +62,13 @@ while True:
       x=x+xmin
       y=y+ymin
 
-      cv.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 1)
-      cv.line(frame, (x + int(w/2), y + int(h/2) + 50), (x + int(w/2), y + int(h/2) - 50), (0, 255, 0), 1)
-      cv.line(frame, (x + int(w/2) + 50, y + int(h/2)), (x + int(w/2) - 50, y + int(h/2)), (0, 255, 0), 1)
+      #creats blue outline box
+        #cv.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 1)
+      #creats green cross hairs
+        #cv.line(frame, (x + int(w/2), y + int(h/2) + 50), (x + int(w/2), y + int(h/2) - 50), (0, 255, 0), 1)
+        #cv.line(frame, (x + int(w/2) + 50, y + int(h/2)), (x + int(w/2) - 50, y + int(h/2)), (0, 255, 0), 1)
+      #creates yellow pupil point
+      cv.circle(frame, (x + int(w/2), y + int(h/2)), 0, (0, 255, 255), 5)
       break
 
     #Right Eye
@@ -74,9 +89,20 @@ while True:
     rightEye = cv.cvtColor(rightEye, cv.COLOR_BGR2GRAY)
     rightEye = cv.GaussianBlur(rightEye, (5,5), 0)
 
-    Rret, Rthresh= cv.threshold(rightEye, 90, 255, cv.THRESH_BINARY_INV)  
+    Rret, Rthresh= cv.threshold(rightEye, 30, 255, cv.THRESH_BINARY_INV)  
     Rcontours, Rhierarchy = cv.findContours(Rthresh, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
     Rcontours = sorted(Rcontours, key=lambda x: cv.contourArea(x), reverse=True)
+
+    #creating axes
+    (x,y,w,h) = cv.boundingRect(leftEye)
+    x=x+xmin
+    y=y+ymin
+
+    #creats blue outline box
+    cv.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 0), 1)
+    #creats white cross hairs
+    cv.line(frame, (x + int(w/2), y + int(h)), (x + int(w/2), y ), (255, 255, 255), 1)
+    cv.line(frame, (x + int(w), y + int(h/2)), (x , y + int(h/2)), (255, 255, 255), 1)
 
     #lines locating pupils
     for cnt in Rcontours:
@@ -85,15 +111,21 @@ while True:
       y=y+ymin
       rows, cols, _= frame.shape
 
-      cv.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 1)
-      cv.line(frame, (x + int(w/2), y + int(h/2) + 50), (x + int(w/2), y + int(h/2) - 50), (0, 255, 0), 1)
-      cv.line(frame, (x + int(w/2) + 50, y + int(h/2)), (x + int(w/2) - 50, y + int(h/2)), (0, 255, 0), 1)
+      #blue pupil rectangle outline
+      #cv.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 1)
+
+      #green pupil cross hairs
+      #cv.line(frame, (x + int(w/2), y + int(h/2) + 50), (x + int(w/2), y + int(h/2) - 50), (0, 255, 0), 1)
+      #cv.line(frame, (x + int(w/2) + 50, y + int(h/2)), (x + int(w/2) - 50, y + int(h/2)), (0, 255, 0), 1)
+
+      #green pupil point
+      cv.circle(frame, (x + int(w/2), y + int(h/2)), 0, (0, 255, 255), 5)
       break
     
     h, w = Lthresh.shape
     h1, w1 = Rthresh.shape
-    cv.polylines(frame, [Leye], True, (0,0,255), 1) 
-    cv.polylines(frame, [Reye], True, (0,0,255), 1)
+    #cv.polylines(frame, [Leye], True, (0,0,255), 1) 
+    #cv.polylines(frame, [Reye], True, (0,0,255), 1)
     cv.imshow("Left Threshold", cv.resize(Lthresh, (2*w, 2*h)))
     cv.imshow("Right Threshold", cv.resize(Rthresh, (2*w1, 2*h1)))
    
