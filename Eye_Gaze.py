@@ -7,7 +7,7 @@ import csv
 
 file_name = "shape_predictor_68_face_landmarks.dat" #file with landmark data
 VideoName = "Eye Test 1 Trim" #name of the video to be analyzed
-header = ['Left X', 'Left Y', 'Right X', 'Right Y', 'Timestamp', 'Frame #'] #header of the csv file table
+header = ['Left X', 'Left Height', 'Right X', 'Right Height', 'Timestamp', 'Frame #'] #header of the csv file table
 
 path_parent = os.path.dirname(os.getcwd()) #gets the path to one directory up
 os.chdir(path_parent) #changes working directory to path_parent
@@ -93,29 +93,34 @@ with open(rawDataName, 'w', encoding='UTF8', newline='') as dataFile:
       Ly=Ly+Lymin
       #***************************verify*************************
       Lmid_left = (Lx , Ly + int(Lh/2))
-      Lmid_top = (Lx + int(Lw/2), Ly + int(Lh))
+      Lmid_bottom = (Lx + int(Lw/2), Ly + int(Lh))
       Lmid_right = (Lx + int(Lw), Ly + int(Lh/2))
-      Lmid_bottom = (Lx + int(Lw/2), Ly )
+      Lmid_top = (Lx + int(Lw/2), Ly )
+      Lorigin = (int((Lmid_left[0]+Lmid_right[0])/2), int((Lmid_top[1]+Lmid_bottom[1])/2))
 
       (Rx,Ry,Rw,Rh) = cv.boundingRect(rightEye)
       Rx=Rx+Rxmin
       Ry=Ry+Rymin
       Rmid_left = (Rx , Ry + int(Rh/2))
-      Rmid_top = (Rx + int(Rw/2), Ry + int(Rh))
+      Rmid_bottom = (Rx + int(Rw/2), Ry + int(Rh))
       Rmid_right = (Rx + int(Rw), Ry + int(Rh/2))
-      Rmid_bottom = (Rx + int(Rw/2), Ry )
+      Rmid_top = (Rx + int(Rw/2), Ry )
+      Rorigin = (int((Rmid_left[0]+Rmid_right[0])/2), int((Rmid_top[1]+Rmid_bottom[1])/2))
 
       #creats black outline box
       cv.rectangle(frame, (Lx, Ly), (Lx + Lw, Ly + Lh), (0, 0, 0), 1)
-
       cv.rectangle(frame, (Rx, Ry), (Rx + Rw, Ry + Rh), (0, 0, 0), 1)
 
       #creats white cross hairs
       cv.line(frame, Lmid_top, Lmid_bottom, (255, 255, 255), 1)
       cv.line(frame, Lmid_right, Lmid_left, (255, 255, 255), 1)
+      LHeight = Lmid_bottom[1] - Lmid_top[1]
+      #cv.circle(frame, Lmid_bottom, 5, (255,0,0), 2)
 
       cv.line(frame, Rmid_top, Rmid_bottom, (255, 255, 255), 1)
       cv.line(frame, Rmid_right, Rmid_left, (255, 255, 255), 1)
+      RHeight = Rmid_bottom[1] - Rmid_top[1]
+      #cv.circle(frame, Rmid_bottom, 5, (255,0,0), 2)
 
       #Find Pupil Points ------------------------------------------------------------------------------------
       LPupilPoint = (0,0)
@@ -124,13 +129,14 @@ with open(rawDataName, 'w', encoding='UTF8', newline='') as dataFile:
         (x,y,w,h) = cv.boundingRect(cnt)
         x=x+Lxmin
         y=y+Lymin
-        LPupilPoint = (x + int(w/2), y + int(h/2))
+        LPupilPoint_abs = (x + int(w/2), y + int(h/2))
+        LPupilPoint = ((LPupilPoint_abs[0]-Lorigin[0])/(Lmid_right[0]-Lorigin[0]), (LPupilPoint_abs[1]-Lorigin[1])/(Lmid_top[1]-Lorigin[1]))
 
         #creats blue outline box
         cv.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 1)
         
         #creates yellow pupil point
-        cv.circle(frame, LPupilPoint, 0, (0, 255, 255), 2)
+        cv.circle(frame, LPupilPoint_abs, 0, (0, 255, 255), 2)
         break #to ensure you only do the first one (greatest surface area)
       
       RPupilPoint = (0,0)
@@ -139,26 +145,27 @@ with open(rawDataName, 'w', encoding='UTF8', newline='') as dataFile:
         (x,y,w,h) = cv.boundingRect(cnt)
         x=x+Rxmin
         y=y+Rymin
-        RPupilPoint = (x + int(w/2), y + int(h/2))
+        RPupilPoint_abs = (x + int(w/2), y + int(h/2))
+        RPupilPoint = ((RPupilPoint_abs[0]-Rorigin[0])/(Rmid_right[0]-Rorigin[0]), (RPupilPoint_abs[1]-Rorigin[1])/(Rmid_top[1]-Rorigin[1]))
 
         #creates blue outline box
         cv.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 1)
 
         #creates yellow pupil point
-        cv.circle(frame, RPupilPoint, 0, (0, 255, 255), 2)
+        cv.circle(frame, RPupilPoint_abs, 0, (0, 255, 255), 2)
         break #to ensure you only do the first one (greatest surface area)
 
-      #Recording output values -------------------------------------------------------------------------------
-      output = [str(LPupilPoint[0]), str(LPupilPoint[1]), str(RPupilPoint[0]), str(RPupilPoint[1]),str(math.ceil(cap.get(cv.CAP_PROP_POS_MSEC))), str((cap.get(cv.CAP_PROP_POS_FRAMES)))]
+      #Recording output values -------------------------------------------------------------------------------      
+      output = [str(LPupilPoint[0]), str(LHeight), str(RPupilPoint[0]), str(RHeight),str(math.ceil(cap.get(cv.CAP_PROP_POS_MSEC))), str((cap.get(cv.CAP_PROP_POS_FRAMES)))]
       writer.writerow(output)
 
       #Displaying Frames ------------------------------------------------------------------------------------
-      #***h, w = Lthresh.shape*******************************************************
-      #***h1, w1 = Rthresh.shape*******************************************************
+      #h, w = Lthresh.shape
+      #h1, w1 = Rthresh.shape
       #cv.polylines(frame, [Leye], True, (0,0,255), 1) 
       #cv.polylines(frame, [Reye], True, (0,0,255), 1)
-      #***cv.imshow("Left Threshold", cv.resize(Lthresh, (2*w, 2*h)))
-      #***cv.imshow("Right Threshold", cv.resize(Rthresh, (2*w1, 2*h1)))
+      #cv.imshow("Left Threshold", cv.resize(Lthresh, (2*w, 2*h)))
+      #cv.imshow("Right Threshold", cv.resize(Rthresh, (2*w1, 2*h1)))
         
     #a half sized frame is better when we read from an mp4 file but the original size is better when reading from the camera
     height, width,_ = frame.shape  
