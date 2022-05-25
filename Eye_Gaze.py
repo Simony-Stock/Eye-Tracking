@@ -7,7 +7,7 @@ import csv
 
 file_name = "shape_predictor_68_face_landmarks.dat" #file with landmark data
 VideoName = "Eye Test 1 Trim" #name of the video to be analyzed
-header = ['Left X', 'Left Height', 'Right X', 'Right Height', 'Timestamp', 'Frame #'] #header of the csv file table
+header = ['Left X', 'Left Height', 'Right X', 'Right Height', 'Timestamp'] #header of the csv file table
 
 path_parent = os.path.dirname(os.getcwd()) #gets the path to one directory up
 os.chdir(path_parent) #changes working directory to path_parent
@@ -156,7 +156,7 @@ with open(rawDataName, 'w', encoding='UTF8', newline='') as dataFile:
         break #to ensure you only do the first one (greatest surface area)
 
       #Recording output values -------------------------------------------------------------------------------      
-      output = [str(LPupilPoint[0]), str(LHeight), str(RPupilPoint[0]), str(RHeight),str(math.ceil(cap.get(cv.CAP_PROP_POS_MSEC))), str((cap.get(cv.CAP_PROP_POS_FRAMES)))]
+      output = [str(LPupilPoint[0]), str(LHeight), str(RPupilPoint[0]), str(RHeight),str(math.ceil(cap.get(cv.CAP_PROP_POS_MSEC)))] #str((cap.get(cv.CAP_PROP_POS_FRAMES)))
       writer.writerow(output)
 
       #Displaying Frames ------------------------------------------------------------------------------------
