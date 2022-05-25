@@ -1,27 +1,29 @@
 import csv
-#from csv import writer
-#from csv import reader
 import pandas as pd
 import numpy as np
 
 inputFileName = "Test1";
 outputFileName = inputFileName +"fix";
+column = 0
+row = 0
 
 #AOI_val = '1'
 
-# Read CSV file into DataFrame df
+#Read CSV file into DataFrame df
 df = pd.read_csv(inputFileName+'.csv')
     
 leftXThreshold = 0; #threshold value for the x coordinate of left eye
 
 #function that checks if the value in the spcified column of the CSV is greater than the desired threshold value
-def condition(text, value):
-    return df[text] > value
+def isLeft(text):
+    return df[text] > leftXThreshold
 
-print(condition('Left X', leftXThreshold)) # output of condition is a series of boolean (T/F) statements with a length equal to the number of rows 
+print(isLeft('Left X')) # output of condition is a series of boolean (T/F) statements with a length equal to the number of rows 
+
+
 
 #change the value of AOI variable based on the value of left x and left y
-df.loc[condition('Left X', leftXThreshold), 'AOI'] = 12; #AOI set to 122 if X and Y value is positive
+df.loc[isLeft('Left X'), 'AOI'] = 12; #AOI set to 122 if X and Y value is positive
 
 # Show the loaded and edited data from the dataframe in the terminal
 print(df)
