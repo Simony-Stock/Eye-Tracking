@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 
-inputFileName = "Test1";
+inputFileName = "Eye Test 2";
 outputFileName = inputFileName +"fix";
 
 #AOI_val = '1'
@@ -14,19 +14,30 @@ os.chdir(path_parent) #changes working directory to path_parent
 #Read CSV file into DataFrame df
 df = pd.read_csv(inputFileName+'.csv')
     
-leftXThreshold = 0; #threshold value for the x coordinate of left eye
+leftXThreshold = 0 #threshold value for the x coordinate of left eye
+leftXMINThreshold = -0.2 #threshold value for the extreme x coordinate of left eye
+leftXMAXThreshold = 0.3
+
+rightXThreshold = 0 #threshold value for the x coordinate of right eye
+rightXMINThreshold = -0.2 #threshold value for the extreme minumum x coordinate of right eye
+rightXMAXThreshold = 0.3 #threshold value for the extreme maximum x coordinate of right eye
 
 #function that checks if the value in the spcified column of the CSV is greater than the desired threshold value
 #this will corespond with looking in the left half of the screen
 def findCol(left, right):
     #set variables-----------------------------------------------------------------------------------------
-    LisCol0 = df[left] != np.empty
-    LisCol1 = df[left] < leftXThreshold
-    LisCol2 = df[left] > leftXThreshold
-
+    LisCol0 = df[left] != np.empty 
+    #converting the df left column into a series to apply the series.between function to compare < and > simulataneously
+    leftcol = df[left].squeeze()
+    LisCol1 = leftcol.between(leftXMINThreshold, leftXThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
+    LisCol2 = leftcol.between(leftXThreshold, leftXMAXThreshold, inclusive="neither")
+    
+    
     RisCol0 = df[right] != np.empty
-    RisCol1 = df[right] < leftXThreshold
-    RisCol2 = df[right] > leftXThreshold
+    #converting the df right column into a series to apply the series.between function to compare < and > simulataneously
+    rightcol = df[right].squeeze() 
+    RisCol1 = rightcol.between(rightXMINThreshold, rightXThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
+    RisCol2 = rightcol.between(rightXThreshold, rightXMAXThreshold, inclusive="neither")
 
     #name columns------------------------------------------------------------------------------------------
     df.loc[LisCol0, 'Lcolumn'] = 0 #sets all non empty cels to 0
