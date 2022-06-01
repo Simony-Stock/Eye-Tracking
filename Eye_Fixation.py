@@ -22,8 +22,17 @@ rightXThreshold = 0 #threshold value for the x coordinate of right eye
 rightXMINThreshold = -0.2 #threshold value for the extreme minumum x coordinate of right eye
 rightXMAXThreshold = 0.3 #threshold value for the extreme maximum x coordinate of right eye
 
+leftYThreshold = 20 #threshold value for theshold height of the eye between upper and lower
+leftYMINThreshold = 15 #threshold value for the extreme minimum y height of left eye
+leftYMAXThreshold = 27 #threshold value for the extreme maximum y height of left eye
+
+rightYThreshold = 23 #threshold value for theshold height of the eye between upper and lower
+rightYMINThreshold = 15 #threshold value for the extreme minimum y height of right eye
+rightYMAXThreshold = 27 #threshold value for the extreme maximum y height of right eye
+
 #function that checks if the value in the spcified column of the CSV is greater than the desired threshold value
 #this will corespond with looking in the left half of the screen
+#2 - LEFT half of the screen, 1- RIGHT half of the screen, 0- NEITHER or UNKNOWN
 def findCol(left, right):
     #set variables-----------------------------------------------------------------------------------------
     LisCol0 = df[left] != np.empty 
@@ -48,7 +57,34 @@ def findCol(left, right):
     df.loc[RisCol1, 'Rcolumn'] = 1 #adds in col=1
     df.loc[RisCol2, 'Rcolumn'] = 2 #adds in col=2
 
+#function to identify the row (upper or lower) that the eye is gazing based on the height of the eye itself
+#2 - UPPER half of the screen, 1- LOWER half of the screen, 0- NEITHER or UNKNOWN
+def findRow(lefth, righth):
+
+    LisRow0 = df[lefth] != np.empty 
+    #converting the df left column into a series to apply the series.between function to compare < and > simulataneously
+    leftrow = df[lefth].squeeze()
+    LisRow1 = leftrow.between(leftYMINThreshold, leftYThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
+    LisRow2 = leftrow.between(leftYThreshold, leftYMAXThreshold, inclusive="neither")
+    
+    
+    RisRow0 = df[righth] != np.empty
+    #converting the df right column into a series to apply the series.between function to compare < and > simulataneously
+    rightrow = df[righth].squeeze() 
+    RisRow1 = rightrow.between(rightYMINThreshold, rightYThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
+    RisRow2 = rightrow.between(rightYThreshold, rightYMAXThreshold, inclusive="neither")
+
+    #name columns------------------------------------------------------------------------------------------
+    df.loc[LisRow0, 'Lrow'] = 0 #sets all non empty cels to 0
+    df.loc[LisRow1, 'Lrow'] = 1 #adds in col=1
+    df.loc[LisRow2, 'Lrow'] = 2 #adds in col=2
+
+    df.loc[RisRow0, 'Rrow'] = 0 #sets all non empty cels to 0
+    df.loc[RisRow1, 'Rrow'] = 1 #adds in col=1
+    df.loc[RisRow2, 'Rrow'] = 2 #adds in col=2
+
 findCol('Left X', 'Right X') #sets the column array
+findRow('Left Height','Right Height') #sets the row array
 
 #change the value of AOI variable based on the value of left x and left y
 #df.loc[isLeft('Left X'), 'AOI'] = 12; #AOI set to 122 if X and Y value is positive
