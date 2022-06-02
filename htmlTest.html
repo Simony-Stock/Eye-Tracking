@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- initializing setup -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, intial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap-grid.css">
+</head>
+
+
+<body>
+    <!-- initializing setup -->
+    <script scr = "js/bootstrap.js"></script>
+
+    <!-- 
+    <button id="startButton" type="button">Click to Start!</button>
+
+    <script>
+        document.getElementById("startButton").onclick = function(){
+            myFunction()
+        };
+        function myFunction() {
+            document.getElementById('box1').src = "img/apple.jpg";
+            document.getElementById('box2').src = "img/banana.jpg";
+            document.getElementById('box3').src = "img/orange.jpg";
+            document.getElementById('box4').src = "img/grapes.jpg";
+        }
+    </script>
+    creating start button -->
+    
+   
+
+    <!-- creating image grid -->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm"><img class="img-fluid" style="width: 100%; height: auto;" src= "" id="box1"></div>
+            <div class="col-sm"><img class="img-fluid" style="width: 100%; height: auto;" src= "" id="box2"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm"><img class="img-fluid" style="width: 100%; height: auto;" src= "" id="box3"></div>
+            <div class="col-sm"><img class="img-fluid" style="width: 100%; height: auto;" src= "" id="box4"></div>
+        </div>
+    </div>
+
+    <!-- changing images in grid -->
+    <script>
+
+        //image set for box1
+        var image1 = document.getElementById("box1");
+        var imageSet1 = ["img/animal1.jpg", "img/buildings1.jpg", "img/ocean1.jpg", "img/testcomplete.jpg"]
+
+        //image set for box2
+        var image2 = document.getElementById("box2");
+        var imageSet2 = ["img/animal2.jpg", "img/buildings2.jpg", "img/ocean2.jpg", "img/white.jpg"]
+
+        //image set for box3
+        var image3 = document.getElementById("box3");
+        var imageSet3 = ["img/animal3.jpg", "img/buildings3.jpg", "img/ocean3.jpg", "img/white.jpg"]
+        
+        //image set for box4
+        var image4 = document.getElementById("box4");
+        var imageSet4 = ["img/animal4.jpg", "img/buildings4.jpg", "img/ocean4.jpg", "img/white.jpg"]
+        
+
+        var currentPos = 0;
+        var timer = setInterval(function(){
+            image1.src = imageSet1[currentPos];
+            image2.src = imageSet2[currentPos];
+            image3.src = imageSet3[currentPos];
+            image4.src = imageSet4[currentPos];
+            currentPos += 1;
+
+            if(currentPos == 4){
+                clearInterval(timer);
+                
+             }
+        }, 5000); //time in milliseconds (1000ms = 1s) 
+
+    </script>
+
+
+</body>
+</html>
+

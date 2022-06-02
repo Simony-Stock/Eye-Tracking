@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- initializing setup -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, intial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap-grid.css">
+</head>
+
+
+<body>
+    <!-- initializing setup -->
+    <script scr = "js/bootstrap.js"></script>
+
+    <!-- creating visuals -->
+    <button id="start-camera">Start Camera</button>
+    <video id="cam-video" width="320" height="240" autoplay></video>
+    <button id="start-record">Start Recording</button>
+    <a id="download-video" download="test.webm">Download Video</a>
+
+    <!-- quadrant video -->
+    <video  id="QuadVideo" width="250">
+        <source src="Quadrant Video.mp4" type="video/mp4">
+    </video>
+    
+    <!-- switching to javascript -->
+    <script>
+        //returns the element that matches the id 
+        let cameraButton = document.querySelector("#start-camera");
+        let CamVideo = document.querySelector("#cam-video");
+        let startButton = document.querySelector("#start-record");
+        let downloadVideoLink = document.querySelector("#download-video");
+        let QuadVideo = document.querySelector("#QuadVideo");
+
+        let cameraStream = null;
+        let mediaRecord = null;
+        let blobsRecord = [];
+
+        cameraButton.addEventListener('click', async function() {
+            //accessing the user's webcam 
+            cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            CamVideo.srcObject = cameraStream;
+
+            var fade_out = function() {
+                CamVideo.fadeOut().empty();
+            }
+            setTimeout(fade_out, 2000); //in ms
+
+        });
+
+        startButton.addEventListener('click', function() {
+            //source stream = cameraStream and recording type =  video/webm
+            mediaRecord = new MediaRecorder(cameraStream, { mimeType: 'video/webm' });
+
+            //data from mediaRecord is pushed into blobsRecord array
+            mediaRecord.addEventListener('dataavailable', function(e) {
+                blobsRecord.push(e.data);                
+            });
+
+            //when QuadVideo is finished
+            QuadVideo.addEventListener('ended',myHandler,false);
+            function myHandler(e) {
+                //create URL from the recorded video blobs
+                let newVideo = URL.createObjectURL(new Blob(blobsRecord, { type: 'video/webm' }));
+                downloadVideoLink.href = newVideo;
+
+                MediaRecord.getTracks().forEach(function(track) {
+                    track.stop();
+                });
+
+            }
+
+            //start recording with each recorded blob beening 1 sec (time in brackets in ms)
+            mediaRecord.start(1000);
+        });
+
+        //start button to play video
+        startButton.addEventListener('click', function() {
+            QuadVideo.play();
+        });
+                    
+    </script>
+
+
+</body>
+</html>
+

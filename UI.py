@@ -17,7 +17,7 @@ wpage.geometry("%dx%d" % (pagewidth, pageheight))
 
 #creating images
 pic1 = Image.open("ocean1.jpg") #open path to image
-pic1 = pic1.resize((768, 432), Image.ANTIALIAS) #(height, width)
+pic1 = pic1.resize((768, 432), Image.ANTIALIAS) #(width, height)
 pic1Tk = ImageTk.PhotoImage(pic1) #converts image to a tkinter image
 L1 = Label(image = pic1Tk) # converts tkinter image to useful label
 
