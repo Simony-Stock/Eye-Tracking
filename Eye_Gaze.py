@@ -1,4 +1,5 @@
 import math
+import string
 import cv2 as cv
 import numpy as np
 import dlib 
@@ -114,12 +115,16 @@ with open(rawDataName, 'w', encoding='UTF8', newline='') as dataFile:
       #creats white cross hairs
       cv.line(frame, Lmid_top, Lmid_bottom, (255, 255, 255), 1)
       cv.line(frame, Lmid_right, Lmid_left, (255, 255, 255), 1)
+      LWidth = Lmid_right[0] - Lmid_left[0]
       LHeight = Lmid_bottom[1] - Lmid_top[1]
+      LHeightNorm = LHeight/LWidth
       #cv.circle(frame, Lmid_bottom, 5, (255,0,0), 2)
 
       cv.line(frame, Rmid_top, Rmid_bottom, (255, 255, 255), 1)
       cv.line(frame, Rmid_right, Rmid_left, (255, 255, 255), 1)
+      RWidth = Rmid_right[0] - Rmid_left[0]
       RHeight = Rmid_bottom[1] - Rmid_top[1]
+      RHeightNorm = RHeight/RWidth
       #cv.circle(frame, Rmid_bottom, 5, (255,0,0), 2)
 
       #Find Pupil Points ------------------------------------------------------------------------------------
@@ -156,7 +161,7 @@ with open(rawDataName, 'w', encoding='UTF8', newline='') as dataFile:
         break #to ensure you only do the first one (greatest surface area)
 
       #Recording output values -------------------------------------------------------------------------------      
-      output = [str(LPupilPoint[0]), str(LHeight), str(RPupilPoint[0]), str(RHeight),str(math.ceil(cap.get(cv.CAP_PROP_POS_MSEC)))] #str((cap.get(cv.CAP_PROP_POS_FRAMES)))
+      output = [str(LPupilPoint[0]), str(LHeightNorm), str(RPupilPoint[0]), str(RHeightNorm),str(math.ceil(cap.get(cv.CAP_PROP_POS_MSEC)))] #str((cap.get(cv.CAP_PROP_POS_FRAMES)))
       writer.writerow(output)
 
       #Displaying Frames ------------------------------------------------------------------------------------
