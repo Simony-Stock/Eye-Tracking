@@ -21,25 +21,25 @@
     <a id="download-video" download="test.webm">Download Video</a>
 
     <!-- quadrant video -->
-    <video  id="QuadVideo" width="250">
+    <video  id="quadVideo" width="250">
         <source src="Quadrant Video.mp4" type="video/mp4">
     </video>
     
     <!-- switching to javascript -->
     <script>
         //returns the element that matches the id 
-        let cameraButton = document.querySelector("#start-camera");
+        let startCamB = document.querySelector("#start-camera");
         let video = document.querySelector("#video");
-        let startButton = document.querySelector("#start-record");
+        let startRecordB = document.querySelector("#start-record");
         let stopButton = document.querySelector("#stop-record");
-        let downloadVideoLink = document.querySelector("#download-video");
-        let QuadVideo = document.querySelector("#QuadVideo");
+        let downloadVideoB = document.querySelector("#download-video");
+        let quadVideo = document.querySelector("#quadVideo");
 
         let cameraStream = null;
         let mediaRecord = null;
         let blobsRecord = [];
 
-        cameraButton.addEventListener('click', async function() {
+        startCamB.addEventListener('click', async function() {
             //accessing the user's webcam 
             cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
             video.srcObject = cameraStream;
@@ -51,7 +51,7 @@
 
         });
 
-        startButton.addEventListener('click', function() {
+        startRecordB.addEventListener('click', function() {
             //source stream = cameraStream and recording type =  video/webm
             mediaRecord = new MediaRecorder(cameraStream, { mimeType: 'video/webm' });
 
@@ -64,7 +64,7 @@
             mediaRecord.addEventListener('stop', function() {
                 //create URL from the recorded video blobs
                 let newVideo = URL.createObjectURL(new Blob(blobsRecord, { type: 'video/webm' }));
-                downloadVideoLink.href = newVideo;
+                downloadVideoB.href = newVideo;
             });
 
             //start recording with each recorded blob beening 1 sec (time in brackets in ms)
@@ -72,8 +72,8 @@
         });
 
         //start button to play video
-        startButton.addEventListener('click', function() {
-            QuadVideo.play();
+        startRecordB.addEventListener('click', function() {
+            quadVideo.play();
             
         });
     
