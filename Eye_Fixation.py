@@ -38,50 +38,52 @@ def findCol(left, right):
     LisCol0 = df[left] != np.empty 
     #converting the df left column into a series to apply the series.between function to compare < and > simulataneously
     leftcol = df[left].squeeze()
-    LisCol1 = leftcol.between(leftXMINThreshold, leftXThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
-    LisCol2 = leftcol.between(leftXThreshold, leftXMAXThreshold, inclusive="neither")
+    LisCol2 = leftcol.between(leftXMINThreshold, leftXThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
+    LisCol1 = leftcol.between(leftXThreshold, leftXMAXThreshold, inclusive="neither")
     
     
     RisCol0 = df[right] != np.empty
     #converting the df right column into a series to apply the series.between function to compare < and > simulataneously
     rightcol = df[right].squeeze() 
-    RisCol1 = rightcol.between(rightXMINThreshold, rightXThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
-    RisCol2 = rightcol.between(rightXThreshold, rightXMAXThreshold, inclusive="neither")
+    RisCol2 = rightcol.between(rightXMINThreshold, rightXThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
+    RisCol1 = rightcol.between(rightXThreshold, rightXMAXThreshold, inclusive="neither")
 
     #name columns------------------------------------------------------------------------------------------
     df.loc[LisCol0, 'Lcolumn'] = 0 #sets all non empty cels to 0
-    df.loc[LisCol1, 'Lcolumn'] = 1 #adds in col=1
-    df.loc[LisCol2, 'Lcolumn'] = 2 #adds in col=2
+    df.loc[LisCol1, 'Lcolumn'] = 1 #adds in col=1 - left half screen
+    df.loc[LisCol2, 'Lcolumn'] = 2 #adds in col=2 - right half screen
 
-    df.loc[RisCol0, 'Rcolumn'] = 0 #sets all non empty cels to 0
-    df.loc[RisCol1, 'Rcolumn'] = 1 #adds in col=1
-    df.loc[RisCol2, 'Rcolumn'] = 2 #adds in col=2
+    df.loc[RisCol0, 'Rcolumn'] = 0 #sets all non empty cells to 0
+    df.loc[RisCol1, 'Rcolumn'] = 1 #adds in col=1 - left half screen
+    df.loc[RisCol2, 'Rcolumn'] = 2 #adds in col=2 - right half screen
 
 #function to identify the row (upper or lower) that the eye is gazing based on the height of the eye itself
-#2 - UPPER half of the screen, 1- LOWER half of the screen, 0- NEITHER or UNKNOWN
+#1 - UPPER half of the screen, 2- LOWER half of the screen, 0- NEITHER or UNKNOWN
 def findRow(lefth, righth):
 
     LisRow0 = df[lefth] != np.empty 
     #converting the df left column into a series to apply the series.between function to compare < and > simulataneously
     leftrow = df[lefth].squeeze()
-    LisRow1 = leftrow.between(leftYMINThreshold, leftYThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
-    LisRow2 = leftrow.between(leftYThreshold, leftYMAXThreshold, inclusive="neither")
+    LisRow2 = leftrow.between(leftYMINThreshold, leftYThreshold, inclusive="neither") #creates boolean column of T/F based on left Y value
+    LisRow1 = leftrow.between(leftYThreshold, leftYMAXThreshold, inclusive="neither")
     
     
     RisRow0 = df[righth] != np.empty
     #converting the df right column into a series to apply the series.between function to compare < and > simulataneously
     rightrow = df[righth].squeeze() 
-    RisRow1 = rightrow.between(rightYMINThreshold, rightYThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
-    RisRow2 = rightrow.between(rightYThreshold, rightYMAXThreshold, inclusive="neither")
+    RisRow2 = rightrow.between(rightYMINThreshold, rightYThreshold, inclusive="neither") #creates boolean column of T/F based on right Y value
+    RisRow1 = rightrow.between(rightYThreshold, rightYMAXThreshold, inclusive="neither")
 
     #name columns------------------------------------------------------------------------------------------
-    df.loc[LisRow0, 'Lrow'] = 0 #sets all non empty cels to 0
-    df.loc[LisRow1, 'Lrow'] = 1 #adds in col=1
-    df.loc[LisRow2, 'Lrow'] = 2 #adds in col=2
+    df.loc[LisRow0, 'Lrow'] = 0 #sets all non empty cells to 0
+    df.loc[LisRow1, 'Lrow'] = 1 #adds in col=1 - upper half of screen
+    df.loc[LisRow2, 'Lrow'] = 2 #adds in col=2 - lower half of screen
 
-    df.loc[RisRow0, 'Rrow'] = 0 #sets all non empty cels to 0
-    df.loc[RisRow1, 'Rrow'] = 1 #adds in col=1
-    df.loc[RisRow2, 'Rrow'] = 2 #adds in col=2
+
+    df.loc[RisRow0, 'Rrow'] = 0 #sets all non empty cells to 0
+    df.loc[RisRow1, 'Rrow'] = 1 #adds in col=1 - upper half of screen
+    df.loc[RisRow2, 'Rrow'] = 2 #adds in col=2 - lower half of screen
+
 
 findCol('Left X', 'Right X') #sets the column array
 findRow('Left Height','Right Height') #sets the row array
@@ -94,27 +96,3 @@ print(df)
 
 #print the updated Dataframe to the output csv file
 df.to_csv(outputFileName+'.csv')
-
-
-
-
-#edit a value in the csv file 
-    #df.loc[row_label, column name] = new_value
-    
-#changes the value in the second row of data (0, 1) and the 4th column (header, 0, 1, 2, 3, 4)
-#df.iloc[1, 4] = 12 
-
-#using pandas
-
-#pd.read_csv('Sample CSV File - Sheet1.csv', delimiter = ',')
-
-
-#with open ('Sample CSV File - Sheet1.csv', 'a') as f: #csv file openned in append mode to make changes
-#    df.to_csv(f, mode='a', header=False)
-
-#    input_data = pd.read_csv(file) #import the csv file for reading
-#df.tp_csv(f, header = False)
-#for row in input_data:
-#input_data= input_data[['Left X','Left Y','Right X','Right Y','Time','AOI']]
-#input_data["AOI"] = AOI_val #change the value in the AOI column of every row in the csv file
-#input_data.to_cvs('Sample CSV File - Sheet1.csv') #writing to the csv file
