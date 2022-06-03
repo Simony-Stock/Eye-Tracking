@@ -90,6 +90,9 @@ findCol('Left X', 'Right X') #sets the column array
 findRow('Left Height','Right Height') #sets the row array
 
 #function to identify the AOI (quadrant) based on the row and column caluclated by the findCol and findRow functions
+#def aoiID(left, right, lefth, righth):
+
+
 
 #change the value of AOI variable based on the value of left x and left y
 #df.loc[isLeft('Left X'), 'AOI'] = 12; #AOI set to 122 if X and Y value is positive
