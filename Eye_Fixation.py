@@ -38,15 +38,16 @@ def findCol(left, right):
     LisCol0 = df[left] != np.empty 
     #converting the df left column into a series to apply the series.between function to compare < and > simulataneously
     leftcol = df[left].squeeze()
-    LisCol2 = leftcol.between(leftXMINThreshold, leftXThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
     LisCol1 = leftcol.between(leftXThreshold, leftXMAXThreshold, inclusive="neither")
-    
-    
+    LisCol2 = leftcol.between(leftXMINThreshold, leftXThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
+
+
     RisCol0 = df[right] != np.empty
     #converting the df right column into a series to apply the series.between function to compare < and > simulataneously
     rightcol = df[right].squeeze() 
-    RisCol2 = rightcol.between(rightXMINThreshold, rightXThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
     RisCol1 = rightcol.between(rightXThreshold, rightXMAXThreshold, inclusive="neither")
+    RisCol2 = rightcol.between(rightXMINThreshold, rightXThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
+
 
     #name columns------------------------------------------------------------------------------------------
     df.loc[LisCol0, 'Lcolumn'] = 0 #sets all non empty cels to 0
@@ -60,19 +61,19 @@ def findCol(left, right):
 #function to identify the row (upper or lower) that the eye is gazing based on the height of the eye itself
 #1 - UPPER half of the screen, 2- LOWER half of the screen, 0- NEITHER or UNKNOWN
 def findRow(lefth, righth):
-
+    #set variables-----------------------------------------------------------------------------------------
     LisRow0 = df[lefth] != np.empty 
     #converting the df left column into a series to apply the series.between function to compare < and > simulataneously
     leftrow = df[lefth].squeeze()
-    LisRow2 = leftrow.between(leftYMINThreshold, leftYThreshold, inclusive="neither") #creates boolean column of T/F based on left Y value
     LisRow1 = leftrow.between(leftYThreshold, leftYMAXThreshold, inclusive="neither")
-    
-    
+    LisRow2 = leftrow.between(leftYMINThreshold, leftYThreshold, inclusive="neither") #creates boolean column of T/F based on left Y value
+
     RisRow0 = df[righth] != np.empty
     #converting the df right column into a series to apply the series.between function to compare < and > simulataneously
     rightrow = df[righth].squeeze() 
-    RisRow2 = rightrow.between(rightYMINThreshold, rightYThreshold, inclusive="neither") #creates boolean column of T/F based on right Y value
     RisRow1 = rightrow.between(rightYThreshold, rightYMAXThreshold, inclusive="neither")
+    RisRow2 = rightrow.between(rightYMINThreshold, rightYThreshold, inclusive="neither") #creates boolean column of T/F based on right Y value
+
 
     #name columns------------------------------------------------------------------------------------------
     df.loc[LisRow0, 'Lrow'] = 0 #sets all non empty cells to 0
@@ -87,6 +88,8 @@ def findRow(lefth, righth):
 
 findCol('Left X', 'Right X') #sets the column array
 findRow('Left Height','Right Height') #sets the row array
+
+#function to identify the AOI (quadrant) based on the row and column caluclated by the findCol and findRow functions
 
 #change the value of AOI variable based on the value of left x and left y
 #df.loc[isLeft('Left X'), 'AOI'] = 12; #AOI set to 122 if X and Y value is positive
