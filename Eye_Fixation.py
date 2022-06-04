@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 
-inputFileName = "Eye Test 2";
+inputFileName = "Eye Test 4";
 outputFileName = inputFileName +"fix";
 
 #AOI_val = '1'
@@ -22,13 +22,13 @@ rightXThreshold = 0 #threshold value for the x coordinate of right eye
 rightXMINThreshold = -0.2 #threshold value for the extreme minumum x coordinate of right eye
 rightXMAXThreshold = 0.3 #threshold value for the extreme maximum x coordinate of right eye
 
-leftYThreshold = 20 #threshold value for theshold height of the eye between upper and lower
-leftYMINThreshold = 15 #threshold value for the extreme minimum y height of left eye
-leftYMAXThreshold = 27 #threshold value for the extreme maximum y height of left eye
+leftYThreshold = 0.29 #threshold value for theshold height of the eye between upper and lower
+leftYMINThreshold = 0.2 #threshold value for the extreme minimum y height of left eye
+leftYMAXThreshold = 0.35 #threshold value for the extreme maximum y height of left eye
 
-rightYThreshold = 23 #threshold value for theshold height of the eye between upper and lower
-rightYMINThreshold = 15 #threshold value for the extreme minimum y height of right eye
-rightYMAXThreshold = 27 #threshold value for the extreme maximum y height of right eye
+rightYThreshold = 0.29 #threshold value for theshold height of the eye between upper and lower
+rightYMINThreshold = 0.2 #threshold value for the extreme minimum y height of right eye
+rightYMAXThreshold = 0.35 #threshold value for the extreme maximum y height of right eye
 
 #function that checks if the value in the spcified column of the CSV is greater than the desired threshold value
 #this will corespond with looking in the left half of the screen
