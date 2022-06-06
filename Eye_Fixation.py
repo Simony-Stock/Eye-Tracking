@@ -6,7 +6,6 @@ import os
 inputFileName = "Eye Test 4";
 outputFileName = inputFileName +"fix";
 
-#AOI_val = '1'
 
 path_parent = os.path.dirname(os.getcwd()) #gets the path to one directory up
 os.chdir(path_parent) #changes working directory to path_parent
@@ -89,13 +88,23 @@ def findRow(lefth, righth):
 findCol('Left X', 'Right X') #sets the column array
 findRow('Left Height','Right Height') #sets the row array
 
+
 #function to identify the AOI (quadrant) based on the row and column caluclated by the findCol and findRow functions
-#def aoiID(left, right, lefth, righth):
+#Any row with the column and row within the left anr right eye that are not equal will be removed
 
+def AOIid(LeftCol, RightCol, LeftRow, RightRow):
+    colunEqual = (df[LeftCol] != df[RightCol]) #left and right column unequal
+    rowunEqual = (df[LeftRow] != df[RightRow]) #left and right row unequal
+    colEqual = (df[LeftCol] == df[RightCol]) #left and right column equal
+    rowEqual = (df[LeftRow] == df[RightRow]) #left and right row equal
+    condition1 = ((df[LeftCol] == 1) & (df[LeftRow] == 1)) #quadrant 1, upper left conditon
+    condition2 = ((df[LeftCol] == 2) & (df[LeftRow] == 1)) #quadrant 2, upper right conditon
+    condition3 = ((df[LeftCol] == 1) & (df[LeftRow] == 2)) #quadrant 3, lower left conditon
+    condition4 = ((df[LeftCol] == 2) & (df[LeftRow] == 2)) #quadrant 4, lower right conditon
 
+    df['AOI'] = np.select([colunEqual, rowunEqual, condition1, condition2, condition3, condition4], [0,0,1, 2, 3, 4], default=np.nan)
 
-#change the value of AOI variable based on the value of left x and left y
-#df.loc[isLeft('Left X'), 'AOI'] = 12; #AOI set to 122 if X and Y value is positive
+AOIid('Lcolumn', 'Rcolumn', 'Lrow', 'Rrow') #change the value of AOI column based on the value of row and column
 
 # Show the loaded and edited data from the dataframe in the terminal
 print(df)
