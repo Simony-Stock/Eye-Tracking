@@ -40,26 +40,27 @@
     
     <!-- switching to javascript -->
     <script>
-        //returns the element that matches the id 
+        //creates element that matches the id 
         let startCamB = document.querySelector("#start-camera");
         let camVideo = document.querySelector("#cam-video");
         let startRecordB = document.querySelector("#start-record");
         let downloadVideoB = document.querySelector("#download-video");
         let quadVideo = document.querySelector("#quadrant-video");
 
+        //creating other new elements 
         let cameraStream = null;
         let mediaRecord = null;
         let blobsRecord = [];
 
-        //when button to start camera is clicked
+        //when "Start Camera" button is clicked
         startCamB.addEventListener('click', async function() {
-            //access  webcam 
+            //access webcam 
             cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
             camVideo.srcObject = cameraStream;
 
         });
 
-        //when button to start recording is pressed -- the recording of video 
+        //when "Start Recording" is clicked -- the recording of video 
         startRecordB.addEventListener('click', function() {
            //source stream = cameraStream and recording type =  video/webm
             mediaRecord = new MediaRecorder(cameraStream, { mimeType: 'video/webm' });
@@ -87,7 +88,7 @@
             mediaRecord.start(1000);
         });
 
-        //when button to start recording is pressed -- visual functionalities
+        //when "Start Recording" is clicked -- visual functionalities
         startRecordB.addEventListener('click', function() {
             camVideo.style.display = "none";
             document.getElementById("face-position").style.display = "none";
