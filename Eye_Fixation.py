@@ -21,11 +21,11 @@ rightXThreshold = 0 #threshold value for the x coordinate of right eye
 rightXMINThreshold = -0.4 #threshold value for the extreme minumum x coordinate of right eye
 rightXMAXThreshold = 0.3 #threshold value for the extreme maximum x coordinate of right eye
 
-leftYThreshold = 0.30 #threshold value for theshold height of the eye between upper and lower
+leftYThreshold = 0.297 #threshold value for theshold height of the eye between upper and lower
 leftYMINThreshold = 0.2 #threshold value for the extreme minimum y height of left eye
 leftYMAXThreshold = 0.35 #threshold value for the extreme maximum y height of left eye
 
-rightYThreshold = 0.30 #threshold value for theshold height of the eye between upper and lower
+rightYThreshold = 0.297 #threshold value for theshold height of the eye between upper and lower
 rightYMINThreshold = 0.2 #threshold value for the extreme minimum y height of right eye
 rightYMAXThreshold = 0.35 #threshold value for the extreme maximum y height of right eye
 
