@@ -100,7 +100,7 @@ def AOIid(LeftCol, RightCol, LeftRow, RightRow, Time):
     condition3 = ((df[LeftCol] == 1) & (df[LeftRow] == 2)) #quadrant 3, lower left conditon
     condition4 = ((df[LeftCol] == 2) & (df[LeftRow] == 2)) #quadrant 4, lower right conditon
 
-    df['AOI'] = np.select([timeEqualZero, colunEqual, rowunEqual, condition1, condition2, condition3, condition4], [0,0,0,1, 2, 3, 4], default=np.nan)
+    df['AOI'] = np.select([timeEqualZero, colunEqual, rowunEqual, condition1, condition2, condition3, condition4], [0,0,0,1, 2, 3, 4], default=0)
 
 AOIid('Lcolumn', 'Rcolumn', 'Lrow', 'Rrow', 'Timestamp') #change the value of AOI column based on the value of row and column
 
