@@ -13,19 +13,19 @@ os.chdir(path_parent) #changes working directory to path_parent
 #Read CSV file into DataFrame df
 df = pd.read_csv(inputFileName+'.csv')
     
-leftXThreshold = 0 #threshold value for the x coordinate of left eye
-leftXMINThreshold = -0.2 #threshold value for the extreme x coordinate of left eye
-leftXMAXThreshold = 0.3
+leftXThreshold = -0.15 #threshold value for the x coordinate of left eye #changed this 
+leftXMINThreshold = -0.4 #threshold value for the extreme x coordinate of left eye
+leftXMAXThreshold = 0.3 #threshold value for the extreme maximum x coordinate of left eye
 
 rightXThreshold = 0 #threshold value for the x coordinate of right eye
-rightXMINThreshold = -0.2 #threshold value for the extreme minumum x coordinate of right eye
+rightXMINThreshold = -0.4 #threshold value for the extreme minumum x coordinate of right eye
 rightXMAXThreshold = 0.3 #threshold value for the extreme maximum x coordinate of right eye
 
-leftYThreshold = 0.29 #threshold value for theshold height of the eye between upper and lower
+leftYThreshold = 0.30 #threshold value for theshold height of the eye between upper and lower
 leftYMINThreshold = 0.2 #threshold value for the extreme minimum y height of left eye
 leftYMAXThreshold = 0.35 #threshold value for the extreme maximum y height of left eye
 
-rightYThreshold = 0.29 #threshold value for theshold height of the eye between upper and lower
+rightYThreshold = 0.30 #threshold value for theshold height of the eye between upper and lower
 rightYMINThreshold = 0.2 #threshold value for the extreme minimum y height of right eye
 rightYMAXThreshold = 0.35 #threshold value for the extreme maximum y height of right eye
 
@@ -37,15 +37,15 @@ def findCol(left, right):
     LisCol0 = df[left] != np.empty 
     #converting the df left column into a series to apply the series.between function to compare < and > simulataneously
     leftcol = df[left].squeeze()
-    LisCol1 = leftcol.between(leftXThreshold, leftXMAXThreshold, inclusive="neither")
-    LisCol2 = leftcol.between(leftXMINThreshold, leftXThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
+    LisCol1 = leftcol.between(leftXThreshold, leftXMAXThreshold, inclusive="neither") #creates boolean column based on right X value (left)
+    LisCol2 = leftcol.between(leftXMINThreshold, leftXThreshold, inclusive="neither") #creates boolean column based on right X value (right)
 
 
     RisCol0 = df[right] != np.empty
     #converting the df right column into a series to apply the series.between function to compare < and > simulataneously
     rightcol = df[right].squeeze() 
-    RisCol1 = rightcol.between(rightXThreshold, rightXMAXThreshold, inclusive="neither")
-    RisCol2 = rightcol.between(rightXMINThreshold, rightXThreshold, inclusive="neither") #creates boolean column of T/F based on right X value
+    RisCol1 = rightcol.between(rightXThreshold, rightXMAXThreshold, inclusive="neither") #creates boolean column based on left X value (left)
+    RisCol2 = rightcol.between(rightXMINThreshold, rightXThreshold, inclusive="neither") #creates boolean column based on right X value (right)
 
 
     #name columns------------------------------------------------------------------------------------------
@@ -64,21 +64,20 @@ def findRow(lefth, righth):
     LisRow0 = df[lefth] != np.empty 
     #converting the df left column into a series to apply the series.between function to compare < and > simulataneously
     leftrow = df[lefth].squeeze()
-    LisRow1 = leftrow.between(leftYThreshold, leftYMAXThreshold, inclusive="neither")
-    LisRow2 = leftrow.between(leftYMINThreshold, leftYThreshold, inclusive="neither") #creates boolean column of T/F based on left Y value
+    LisRow1 = leftrow.between(leftYThreshold, leftYMAXThreshold, inclusive="neither")  #creates boolean column based on left Y value (upper)
+    LisRow2 = leftrow.between(leftYMINThreshold, leftYThreshold, inclusive="neither") #creates boolean column based on left Y value (lower)
 
     RisRow0 = df[righth] != np.empty
     #converting the df right column into a series to apply the series.between function to compare < and > simulataneously
     rightrow = df[righth].squeeze() 
-    RisRow1 = rightrow.between(rightYThreshold, rightYMAXThreshold, inclusive="neither")
-    RisRow2 = rightrow.between(rightYMINThreshold, rightYThreshold, inclusive="neither") #creates boolean column of T/F based on right Y value
+    RisRow1 = rightrow.between(rightYThreshold, rightYMAXThreshold, inclusive="neither") #creates boolean column of based on right Y value (upper)
+    RisRow2 = rightrow.between(rightYMINThreshold, rightYThreshold, inclusive="neither") #creates boolean column of based on right Y value (lower)
 
 
     #name columns------------------------------------------------------------------------------------------
     df.loc[LisRow0, 'Lrow'] = 0 #sets all non empty cells to 0
     df.loc[LisRow1, 'Lrow'] = 1 #adds in col=1 - upper half of screen
     df.loc[LisRow2, 'Lrow'] = 2 #adds in col=2 - lower half of screen
-
 
     df.loc[RisRow0, 'Rrow'] = 0 #sets all non empty cells to 0
     df.loc[RisRow1, 'Rrow'] = 1 #adds in col=1 - upper half of screen
@@ -90,21 +89,21 @@ findRow('Left Height','Right Height') #sets the row array
 
 
 #function to identify the AOI (quadrant) based on the row and column caluclated by the findCol and findRow functions
-#Any row with the column and row within the left anr right eye that are not equal will be removed
-
-def AOIid(LeftCol, RightCol, LeftRow, RightRow):
+#Any row with the column and row within the left and right eye that are not equal will be removed and AOI set to 0
+def AOIid(LeftCol, RightCol, LeftRow, RightRow, Time):
     colunEqual = (df[LeftCol] != df[RightCol]) #left and right column unequal
     rowunEqual = (df[LeftRow] != df[RightRow]) #left and right row unequal
-    colEqual = (df[LeftCol] == df[RightCol]) #left and right column equal
-    rowEqual = (df[LeftRow] == df[RightRow]) #left and right row equal
+    timeEqualZero = (df[Time] == 0) #AOI will be 0 if timestamp is equal to zero to remove error points
+    #colEqual = (df[LeftCol] == df[RightCol]) #left and right column equal
+    #rowEqual = (df[LeftRow] == df[RightRow]) #left and right row equal
     condition1 = ((df[LeftCol] == 1) & (df[LeftRow] == 1)) #quadrant 1, upper left conditon
     condition2 = ((df[LeftCol] == 2) & (df[LeftRow] == 1)) #quadrant 2, upper right conditon
     condition3 = ((df[LeftCol] == 1) & (df[LeftRow] == 2)) #quadrant 3, lower left conditon
     condition4 = ((df[LeftCol] == 2) & (df[LeftRow] == 2)) #quadrant 4, lower right conditon
 
-    df['AOI'] = np.select([colunEqual, rowunEqual, condition1, condition2, condition3, condition4], [0,0,1, 2, 3, 4], default=np.nan)
+    df['AOI'] = np.select([timeEqualZero, colunEqual, rowunEqual, condition1, condition2, condition3, condition4], [0,0,0,1, 2, 3, 4], default=np.nan)
 
-AOIid('Lcolumn', 'Rcolumn', 'Lrow', 'Rrow') #change the value of AOI column based on the value of row and column
+AOIid('Lcolumn', 'Rcolumn', 'Lrow', 'Rrow', 'Timestamp') #change the value of AOI column based on the value of row and column
 
 # Show the loaded and edited data from the dataframe in the terminal
 print(df)

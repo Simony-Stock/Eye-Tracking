@@ -7,7 +7,7 @@ import os
 import csv
 
 file_name = "shape_predictor_68_face_landmarks.dat" #file with landmark data
-VideoName = "Eye Test 1 Trim" #name of the video to be analyzed
+VideoName = "LongVidTest" #name of the video to be analyzed
 header = ['Left X', 'Left Height', 'Right X', 'Right Height', 'Timestamp'] #header of the csv file table
 
 path_parent = os.path.dirname(os.getcwd()) #gets the path to one directory up
