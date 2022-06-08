@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 
-inputFileName = "Eye Test 4";
+inputFileName = "test";
 outputFileName = inputFileName +"fix";
 
 
@@ -33,12 +33,11 @@ rightYMAXThreshold = 0.35 #threshold value for the extreme maximum y height of r
 #2 - LEFT half of the screen, 1- RIGHT half of the screen, 0- NEITHER or UNKNOWN
 def findCol(left, right):
     #set variables-----------------------------------------------------------------------------------------
-    LisCol0 = df[left] != np.empty 
+    LisCol0 = df[left] != np.empty
     #converting the df left column into a series to apply the series.between function to compare < and > simulataneously
     leftcol = df[left].squeeze()
     LisCol1 = leftcol.between(leftXThreshold, leftXMAXThreshold, inclusive="neither") #creates boolean column based on right X value (left)
     LisCol2 = leftcol.between(leftXMINThreshold, leftXThreshold, inclusive="neither") #creates boolean column based on right X value (right)
-
 
     RisCol0 = df[right] != np.empty
     #converting the df right column into a series to apply the series.between function to compare < and > simulataneously
@@ -90,22 +89,24 @@ findRow('Left Height','Right Height') #sets the row array
 #function to identify the AOI (quadrant) based on the row and column caluclated by the findCol and findRow functions
 #Any row with the column and row within the left and right eye that are not equal will be removed and AOI set to 0
 def AOIid(LeftCol, RightCol, LeftRow, RightRow, Time):
+    #condition setup-----------------------------------------------------------------------------------------------
+    timeEqualZero = (df[Time] == 0) #AOI will be 0 if timestamp is equal to zero to remove error points
+    timeLessThan5 = (df[Time] < 5000 ) #remove points before 5 seconds
+    timeMoreThan5 = (df[Time].index > (len(df.index)-131)) #remove points 5 second from the end of the video using a negative indexed numpy array    
     colunEqual = (df[LeftCol] != df[RightCol]) #left and right column unequal
     rowunEqual = (df[LeftRow] != df[RightRow]) #left and right row unequal
-    timeEqualZero = (df[Time] == 0) #AOI will be 0 if timestamp is equal to zero to remove error points
-    #colEqual = (df[LeftCol] == df[RightCol]) #left and right column equal
-    #rowEqual = (df[LeftRow] == df[RightRow]) #left and right row equal
+
     condition1 = ((df[LeftCol] == 1) & (df[LeftRow] == 1)) #quadrant 1, upper left conditon
     condition2 = ((df[LeftCol] == 2) & (df[LeftRow] == 1)) #quadrant 2, upper right conditon
     condition3 = ((df[LeftCol] == 1) & (df[LeftRow] == 2)) #quadrant 3, lower left conditon
     condition4 = ((df[LeftCol] == 2) & (df[LeftRow] == 2)) #quadrant 4, lower right conditon
 
-    df['AOI'] = np.select([timeEqualZero, colunEqual, rowunEqual, condition1, condition2, condition3, condition4], [0,0,0,1, 2, 3, 4], default=0)
+    #conditional statement for AOI column
+    df['AOI'] = np.select([timeMoreThan5, timeLessThan5, timeEqualZero, colunEqual, rowunEqual, condition1, condition2, condition3, condition4], [0,0,0,0,0,1, 2, 3, 4], default=0)
 
 AOIid('Lcolumn', 'Rcolumn', 'Lrow', 'Rrow', 'Timestamp') #change the value of AOI column based on the value of row and column
 
 # Show the loaded and edited data from the dataframe in the terminal
 print(df)
 
-#print the updated Dataframe to the output csv file
-df.to_csv(outputFileName+'.csv')
+df.to_csv(outputFileName+'.csv') #print the updated Dataframe to the output csv file
