@@ -13,7 +13,7 @@ os.chdir(path_parent) #changes working directory to path_parent
 #Read CSV file into DataFrame df
 df = pd.read_csv(inputFileName+'.csv')
     
-leftXThreshold = -0.15 #threshold value for the x coordinate of left eye #changed this 
+leftXThreshold = 0 #threshold value for the x coordinate of left eye #changed this 
 leftXMINThreshold = -0.4 #threshold value for the extreme x coordinate of left eye
 leftXMAXThreshold = 0.3 #threshold value for the extreme maximum x coordinate of left eye
 
