@@ -5,6 +5,8 @@ from tkinter import *
 from tkinter.filedialog import askopenfilename
 import string
 import Eye_Gaze
+import Eye_Fixation
+import Data_Analysis
 
 #combine all processes into one. say "Processing..." and the "Complete"
 
@@ -53,17 +55,17 @@ def StartAnalysis():
 
   #Step 1 ------------------------------------------------------------------------------------
   status1 = Processing(p4,status1)
-  #gazeFile = Eye_Gaze.getGaze(filename.split(".")[0], filename.split(".")[1]) #passes in the video file and returns the gaze csv file name
+  gazeFile = Eye_Gaze.getGaze(filename.split(".")[0], filename.split(".")[1]) #passes in the video file and returns the gaze csv file name
   Complete(p4,status1)
 
   #Step 2 ------------------------------------------------------------------------------------
   status2 = Processing(p5,status2)
-  fixFile = Eye_Gaze.getGaze(filename.split(".")[0], filename.split(".")[1]) #passes in the video file and returns the gaze csv file name
+  fixFile = Eye_Fixation.getFix(gazeFile.split(".")[0], gazeFile.split(".")[1]) #passes in the video file and returns the gaze csv file name
   Complete(p5,status2)
 
   #Step 3 ------------------------------------------------------------------------------------
   status3 = Processing(p6,status3)
-  #analysisFile = Eye_Gaze.getGaze(filename.split(".")[0], filename.split(".")[1]) #passes in the video file and returns the gaze csv file name
+  analysisFile = Data_Analysis.getAnalysis(fixFile.split(".")[0], fixFile.split(".")[1]) #passes in the video file and returns the gaze csv file name
   Complete(p6,status3)
 
   lbl=Label(p7, text='Results stored in ' + str(fixFile), fg='black', font=("Helvetica", 9))
