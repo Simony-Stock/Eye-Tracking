@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 
-inputFileName = "Eye Test 4";
+inputFileName = "test";
 outputFileName = inputFileName +"fix";
 
 

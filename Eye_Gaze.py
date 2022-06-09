@@ -7,13 +7,13 @@ import os
 import csv
 
 file_name = "shape_predictor_68_face_landmarks.dat" #file with landmark data
-VideoName = "LongVidTest" #name of the video to be analyzed
+VideoName = "test" #name of the video to be analyzed
 header = ['Left X', 'Left Height', 'Right X', 'Right Height', 'Timestamp'] #header of the csv file table
 
 path_parent = os.path.dirname(os.getcwd()) #gets the path to one directory up
 os.chdir(path_parent) #changes working directory to path_parent
 
-cap = cv.VideoCapture(str(VideoName) + ".mp4") #camera 0->rear, 1->front, str(VideoName) + ".mp4"
+cap = cv.VideoCapture(str(VideoName) + ".webm") #camera 0->rear, 1->front, str(VideoName) + ".mp4"
 
 detector = dlib.get_frontal_face_detector() #build in detector to detect the 4 corner points of the face
 predictor = dlib.shape_predictor(file_name) #predicts the facial landmark points 0 to 67

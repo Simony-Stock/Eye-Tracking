@@ -1,4 +1,6 @@
 #INSTALL LIBRARIES
+#pip install -U Pillow
+#pip install kiwisolver  
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sb
@@ -22,7 +24,7 @@ def heatmap_AOI(dataframe):
     plt.show()
 
 # save data from csv file as dataframe
-df = pd.read_csv('Eye Test 8fix.csv')
+df = pd.read_csv('testfix.csv')
 
 #drop all rows with AOI = 0
 df = df[df.AOI != 0]
