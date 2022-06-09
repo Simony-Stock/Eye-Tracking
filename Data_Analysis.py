@@ -18,11 +18,14 @@ def heatmap_AOI(dataframe):
     #set title of heatmap
     g.set_title('Heatmap')
     plt.tight_layout()
+    #save AOI heatmap as image
+    plt.savefig('AOI_Heatmap.png')
     #display plot
     plt.show()
+   
 
 # save data from csv file as dataframe
-df = pd.read_csv('Eye Test 8fix.csv')
+df = pd.read_csv('testfix (1).csv')
 
 #drop all rows with AOI = 0
 df = df[df.AOI != 0]
@@ -51,15 +54,23 @@ left_y_array = df['Left Height'].to_numpy()
 right_x_array = df['Right X'].to_numpy()
 right_y_array = df['Right Height'].to_numpy()
 
+#account for flipped screen, switch negative <--> positive
+left_x_array = [abs(left_x_array[n]) if (left_x_array[n] < 0) else -(left_x_array[n]) for n in range(0, len(left_x_array))]
+
 def heatmap_by_point(x_array, y_array):
 
-    heatmap, xedges, yedges = np.histogram2d(x_array, y_array, bins=20)
+    heatmap, xedges, yedges = np.histogram2d(x_array, y_array, bins=20, range=[[-0.4, 0.4], [0, 0.4]])
     extent = [xedges[0], xedges[-1], yedges[0], yedges[-1]]
     
     plt.clf()
-    plt.imshow(heatmap.T, extent=extent, origin='lower', cmap='Blues')
+    plt.imshow(heatmap.T, extent=extent, origin='lower', cmap='plasma_r')
     cb = plt.colorbar()
+    #save scatter heatmap as image
+    plt.savefig('Scatter_Heatmap.png')
     plt.show()
+    
 
 #create heatmap by points using function
 heatmap_by_point(left_x_array, left_y_array)
+
+
