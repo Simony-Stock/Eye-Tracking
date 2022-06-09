@@ -179,7 +179,7 @@ def getGaze(videoname, ext):
       #a half sized frame is better when we read from an mp4 file but the original size is better when reading from the camera
       height, width,_ = frame.shape  
       #***************************cv.imshow("Frame", cv.resize(frame, (math.floor(width/2), math.floor(height/2)))) 
-      #cv.imshow("Frame", frame)
+      cv.imshow("Frame", frame)
 
       key = cv.waitKey(1)
       if key == 32: #space bar to exit

@@ -5,6 +5,7 @@ from time import *
 from tkinter import *     # from tkinter import Tk for Python 3.x
 from tkinter.filedialog import askopenfilename
 import string
+from tkinter.ttk import Progressbar
 from turtle import onclick
 import Eye_Gaze
 
@@ -55,6 +56,7 @@ def Processing(panel, label):
   label.destroy()
   label=Label(panel, text='Processing...', fg='orange', font=("Helvetica", 9))
   label.pack(side=LEFT)
+  Tk. update_idletasks(window)
   return label
 
 def Complete(panel, label):
