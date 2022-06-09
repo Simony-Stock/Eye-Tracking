@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- initializing setup -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, intial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+</head>
+
+
+<body>
+    <!-- creating visuals using grid-->
+    <div class="container"> 
+        <div class="row" align ="center" >
+            <div class="col" align ="center" ><p>Please press "Start Camera" to view turn on your webcam.</p> </div>
+        </div>
+        <div class="row">
+            <div class="col" align ="center" ><button id="start-camera" type="button" class="btn btn-primary">Start Camera</button></video></div>
+        </div>
+        <div class="row">
+            <div class="col" align ="center" ><video id="cam-video" width="500" height="500" autoplay></video> </div>
+            <div class="col" align ="center" ><img id="face-position" src="FacePosition.png" class="img-fluid" alt="Responsive image" width="500" height="500"></div>   
+        </div>
+        <div class="row">
+            <div class="col" align ="center" ><p>Please ensure your face is centered within the webcam's frame, as demonstrated by the image to the right.  When finished, press "Start Recording". </p> </div>
+        </div>
+        <div class="row">
+            <div class="col" align ="center"><button id="start-record" type="button" class="btn btn-success">Start Recording</button></video> </div>
+            <div class="col" align ="center"><a id="download-video" download="test.webm">Download Video</a></div>
+        </div>
+        <div class="row">
+            <div class="col" align ="center" ><video id="quadrant-video" width="600"><source src="Quadrant Video.mp4" type="video/mp4"></video> </div>
+        </div>
+    </div>
+    
+    <!-- initializing javascript setup -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    
+    <!-- switching to javascript -->
+    <script>
+        //creates element that matches the id 
+        let startCamB = document.querySelector("#start-camera");
+        let camVideo = document.querySelector("#cam-video");
+        let startRecordB = document.querySelector("#start-record");
+        let downloadVideoB = document.querySelector("#download-video");
+        let quadVideo = document.querySelector("#quadrant-video");
+
+        //creating other new elements 
+        let cameraStream = null;
+        let mediaRecord = null;
+        let blobsRecord = [];
+
+        //when "Start Camera" button is clicked
+        startCamB.addEventListener('click', async function() {
+            //access webcam 
+            cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            camVideo.srcObject = cameraStream;
+
+        });
+
+        //when "Start Recording" is clicked -- the recording of video 
+        startRecordB.addEventListener('click', function() {
+           //source stream = cameraStream and recording type =  video/webm
+            mediaRecord = new MediaRecorder(cameraStream, { mimeType: 'video/webm' });
+
+            //data from mediaRecord is pushed into blobsRecord array
+            mediaRecord.addEventListener('dataavailable', function(e) {
+                blobsRecord.push(e.data);                
+            });
+
+            //when quadVideo is finished
+            quadVideo.addEventListener('ended',myHandler,false);
+            function myHandler(e) {
+                //create URL from the recorded video blobs
+                let newVideo = URL.createObjectURL(new Blob(blobsRecord, { type: 'video/webm' }));
+                downloadVideoB.href = newVideo;
+
+                //turn webcam off
+                cameraStream.getTracks().forEach(function (track){
+                    track.stop();
+                });
+    
+            }
+
+            //start recording with each recorded blob beening 1 sec (time in brackets in ms)
+            mediaRecord.start(1000);
+        });
+
+        //when "Start Recording" is clicked -- visual functionalities
+        startRecordB.addEventListener('click', function() {
+            camVideo.style.display = "none";
+            document.getElementById("face-position").style.display = "none";
+            quadVideo.requestFullscreen();
+            quadVideo.play();
+        });
+                    
+    </script>
+
+</body>
+</html>
+
