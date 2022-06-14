@@ -3,7 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sb
 import numpy as np
-from matplotlib import cm as CM
 
 def heatmap_AOI(dataframe):
     cmap = 'Blues'
