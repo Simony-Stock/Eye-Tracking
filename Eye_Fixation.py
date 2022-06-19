@@ -107,48 +107,19 @@ def AOIid(LeftCol, RightCol, LeftRow, RightRow, Time):
 
 AOIid('Lcolumn', 'Rcolumn', 'Lrow', 'Rrow', 'Timestamp') #change the value of AOI column based on the value of row and column
 
-# Show the loaded and edited data from the dataframe in the terminal
-#print(df)
-
 df.to_csv(outputFileName+'.csv') #print the updated Dataframe to the output csv file
-#df = pd.read_csv('AOITest.csv')
-#print(df)
+
 #function to identify areas of fixation by averaging the identified AOIs while removing any 0 terms
 def eyeFixation (LeftCol, RightCol, LeftRow, RightRow, Time, AOI):
     df.drop(df[df[AOI] == 0].index, inplace=True) #remove rows with 0 AOI to calculate the fixation averages
-    print(df)
     #determine the mode of evergy 3 rows of df
-
-    #working but only keeps the AOI columns
-    #fixation = df.groupby(AOI, np.arange(len(df)) // 3, as_index = False)[AOI].apply(lambda x: x.mode()) #take the mode of every 3 AOI values to detrmine fixation
-    
-    #fixation = df.groupby([LeftCol, RightCol, LeftRow, RightRow, Time], as_index = False)[AOI].apply(lambda x: x.mode()) #take the mode of every 3 AOI values to detrmine fixation
     
     #working using a rolling window
-    fixation = df.rolling(window=3, min_periods=1)[AOI].apply(lambda x: mode(x)[0])[::3]
-    
-    #fixation = df.groupby(Time, as_index = True)[AOI].transform(lambda x: x.rolling(window=3, min_periods=1).apply(lambda x: mode(x)[0])[::3])
+    fixation = df.rolling(window=3, min_periods=1)[AOI].apply(lambda x: mode(x)[0])[::3] #calculates the mode in windows of 3 non-zero entries
     fixation.to_csv(outputFileName+'It1.csv') #print the updated Dataframe to the output csv file
-    print(fixation)
     df1 = pd.read_csv(outputFileName+'It1.csv') #create a fixation dataframe for using the mode of the first
     fixation1 = df1.rolling(window=3, min_periods=1)[AOI].apply(lambda x: mode(x)[0])[::3] #take the mode of every 3 AOI values to detrmine fixation
     fixation1.to_csv(outputFileName+'It2.csv') #print the updated Dataframe to the output csv file to display areas of fixation
-    print(fixation1)
-
-
-
-def AOIavg (LeftCol, RightCol, LeftRow, RightRow, Time, AOI):
-    #df1.drop(df1[df1[AOI] == 0].index, inplace=True) #remove rows with 0 AOI to calculate the fixation averages
-    #determine the mode of evergy 3 rows of df
-    #df1.groupby(np.arange(len(df1)) // 3)[AOI].apply(lambda x: x.mode()) #take the mode of every 3 AOI values to detrmine fixation
-    df1.groupby(np.arange(len(df)) // 3)[AOI].apply(lambda x: x.mode()) #take the mode of every 3 AOI values to detrmine fixation
-    #print(df1)
-    print(df1)
-    #df1.groupby(np.arange(len(df1)) // 3)[AOI].apply(lambda y: y.mode())  #perform second iteration of AOI averages 
-    #print(df1)   
-    df1.to_csv(outputFileName+'It2.csv') #print the updated Dataframe to the output csv file
+    print(fixation1) #print identified areas of eye fixation
 
 eyeFixation('Lcolumn', 'Rcolumn', 'Lrow', 'Rrow', 'Timestamp', 'AOI')
-df1 = pd.read_csv(outputFileName+'It1.csv') #create a fixation dataframe
-
-#AOIavg('Lcolumn', 'Rcolumn', 'Lrow', 'Rrow', 'Timestamp', 'AOI')
