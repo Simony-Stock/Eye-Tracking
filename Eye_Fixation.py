@@ -109,17 +109,24 @@ AOIid('Lcolumn', 'Rcolumn', 'Lrow', 'Rrow', 'Timestamp') #change the value of AO
 
 df.to_csv(outputFileName+'.csv') #print the updated Dataframe to the output csv file
 
+
 #function to identify areas of fixation by averaging the identified AOIs while removing any 0 terms
 def eyeFixation (LeftCol, RightCol, LeftRow, RightRow, Time, AOI):
     df.drop(df[df[AOI] == 0].index, inplace=True) #remove rows with 0 AOI to calculate the fixation averages
-    #determine the mode of evergy 3 rows of df
     
-    #working using a rolling window
-    fixation = df.rolling(window=3, min_periods=1)[AOI].apply(lambda x: mode(x)[0])[::3] #calculates the mode in windows of 3 non-zero entries
+    #determine the mode of evergy 3 rows of df  
+    fixation =df.groupby(np.arange(len(df)) // 3)[Time, AOI].apply(lambda x: x.mode()) #groups
     fixation.to_csv(outputFileName+'It1.csv') #print the updated Dataframe to the output csv file
+    
+    #second iteration taking the mode of every 3 again to determine fixation points and relative time
     df1 = pd.read_csv(outputFileName+'It1.csv') #create a fixation dataframe for using the mode of the first
-    fixation1 = df1.rolling(window=3, min_periods=1)[AOI].apply(lambda x: mode(x)[0])[::3] #take the mode of every 3 AOI values to detrmine fixation
+
+    df1= df1.dropna() #remove rows with NAN AOI to calculate the 1/3 the data set, leaving the fixation averages
+
+    fixation1 = df1.groupby(np.arange(len(df1)) // 3)[Time, AOI].apply(lambda x: x.mode()) #groups the data into sets of 3 and calculates the mode of the AOI 
+    fixation1= fixation1.dropna() #remove rows with NAN AOI to calculate the 1/3 the data set, leaving the fixation averages
     fixation1.to_csv(outputFileName+'It2.csv') #print the updated Dataframe to the output csv file to display areas of fixation
-    print(fixation1) #print identified areas of eye fixation
+
+    print(fixation1) #print identified areas of eye fixation and timing
 
 eyeFixation('Lcolumn', 'Rcolumn', 'Lrow', 'Rrow', 'Timestamp', 'AOI')
