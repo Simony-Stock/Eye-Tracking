@@ -6,7 +6,7 @@ import os
 path_parent = os.path.dirname(os.getcwd()) #gets the path to one directory up
 os.chdir(path_parent) #changes working directory to path_parent
 
-cap = cv.VideoCapture(1) #camera 0->rear, 1->front
+cap = cv.VideoCapture("Eye Movement.mp4") #camera 0->rear, 1->front
 detector = dlib.get_frontal_face_detector() #build in detector to detect the 4 corner points of the face
 
 file_name = "shape_predictor_68_face_landmarks.dat" #file with landmark data

@@ -24,7 +24,7 @@ def heatmap_AOI(dataframe):
    
 
 # save data from csv file as dataframe
-df = pd.read_csv('testfix (1).csv')
+df = pd.read_csv('q1fixIt2.csv')
 
 #drop all rows with AOI = 0
 df = df[df.AOI != 0]
@@ -46,12 +46,13 @@ dfAOI = pd.DataFrame(subList, columns =['AOI 1', 'AOI 2'])
 heatmap_AOI(dfAOI)
 
 #SCATTER PLOT/HEATMAP
+dfPts = pd.read_csv('q1fix.csv')
 
 #convert dataframe col/series to numpy array
-left_x_array = df['Left X'].to_numpy()
-left_y_array = df['Left Height'].to_numpy()
-right_x_array = df['Right X'].to_numpy()
-right_y_array = df['Right Height'].to_numpy()
+left_x_array = dfPts['Left X'].to_numpy()
+left_y_array = dfPts['Left Height'].to_numpy()
+right_x_array = dfPts['Right X'].to_numpy()
+right_y_array = dfPts['Right Height'].to_numpy()
 
 #account for flipped screen, switch negative <--> positive
 left_x_array = [abs(left_x_array[n]) if (left_x_array[n] < 0) else -(left_x_array[n]) for n in range(0, len(left_x_array))]
@@ -64,6 +65,13 @@ def heatmap_by_point(x_array, y_array):
     plt.clf()
     plt.imshow(heatmap.T, extent=extent, origin='lower', cmap='plasma_r')
     cb = plt.colorbar()
+    plt.title('Frequency of Eye Gaze Points')
+    plt.ylabel('Normalized Eye Height')
+    plt.xlabel('Pupil Position')
+    plt.text(-0.37, 0.35, 'AOI 1')
+    plt.text(0.3, 0.35, 'AOI 2')
+    plt.text(-0.37, 0.05, 'AOI 3')
+    plt.text(0.3, 0.05, 'AOI 4')
     #save scatter heatmap as image
     plt.savefig('Scatter_Heatmap.png')
     plt.show()
@@ -72,4 +80,29 @@ def heatmap_by_point(x_array, y_array):
 #create heatmap by points using function
 heatmap_by_point(left_x_array, left_y_array)
 
+#AOI OVER TIME
 
+# save data from csv file as dataframe
+sourceFileName = 'q1fixIt2'
+df2 = pd.read_csv(sourceFileName + '.csv')
+
+yAxis = df2['AOI'].tolist()
+xAxis = df2['Timestamp'].tolist()
+plt.plot(xAxis,yAxis)
+plt.title('Eye Fixation Points ' + '(Source: ' + sourceFileName + ')')
+plt.xlabel('Time (ms)')
+plt.ylabel('AOI (Areas of Interest)')
+plt.yticks([0, 1, 2, 3, 4], [0, 1, 2, 3, 4])
+#save scatter heatmap as image
+plt.savefig('AOIvsTime_LineGraph.png')
+plt.show()
+
+
+plt.scatter(xAxis, yAxis)
+plt.title('Eye Fixation Points ' + '(Source: ' + sourceFileName + ')')
+plt.xlabel('Time (ms)')
+plt.ylabel('AOI (Areas of Interest)')
+plt.yticks([0, 1, 2, 3, 4], [0, 1, 2, 3, 4])
+#save scatter heatmap as image
+plt.savefig('AOIvsTime_Scatter.png')
+plt.show()
