@@ -79,3 +79,30 @@ def heatmap_by_point(x_array, y_array):
 
 #create heatmap by points using function
 heatmap_by_point(left_x_array, left_y_array)
+
+#AOI OVER TIME
+
+# save data from csv file as dataframe
+sourceFileName = 'q1fixIt2'
+df2 = pd.read_csv(sourceFileName + '.csv')
+
+yAxis = df2['AOI'].tolist()
+xAxis = df2['Timestamp'].tolist()
+plt.plot(xAxis,yAxis)
+plt.title('Eye Fixation Points ' + '(Source: ' + sourceFileName + ')')
+plt.xlabel('Time (ms)')
+plt.ylabel('AOI (Areas of Interest)')
+plt.yticks([0, 1, 2, 3, 4], [0, 1, 2, 3, 4])
+#save scatter heatmap as image
+plt.savefig('AOIvsTime_LineGraph.png')
+plt.show()
+
+
+plt.scatter(xAxis, yAxis)
+plt.title('Eye Fixation Points ' + '(Source: ' + sourceFileName + ')')
+plt.xlabel('Time (ms)')
+plt.ylabel('AOI (Areas of Interest)')
+plt.yticks([0, 1, 2, 3, 4], [0, 1, 2, 3, 4])
+#save scatter heatmap as image
+plt.savefig('AOIvsTime_Scatter.png')
+plt.show()
