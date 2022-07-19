@@ -3,7 +3,7 @@ import numpy as np
 import os
 from scipy.stats import mode
 
-inputFileName = "JQ4";
+inputFileName = "ji35";
 outputFileName = inputFileName +"fix";
 
 
