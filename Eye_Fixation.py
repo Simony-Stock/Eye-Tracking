@@ -11,21 +11,21 @@ def getFix(filename, ext):
     #Read CSV file into DataFrame df
     df = pd.read_csv(inputFileName + "." + ext)
         
-    leftXThreshold = -0.135 #threshold value for the x coordinate of left eye #changed this 
+    leftXThreshold = 0 #threshold value for the x coordinate of left eye #changed this 
     leftXMINThreshold = -0.4 #threshold value for the extreme x coordinate of left eye
     leftXMAXThreshold = 0.3 #threshold value for the extreme maximum x coordinate of left eye
 
-    rightXThreshold = 0.127 #threshold value for the x coordinate of right eye
-    rightXMINThreshold = -0.3 #threshold value for the extreme minumum x coordinate of right eye
-    rightXMAXThreshold = 0.5 #threshold value for the extreme maximum x coordinate of right eye
+    rightXThreshold = 0 #threshold value for the x coordinate of right eye
+    rightXMINThreshold = -0.4 #threshold value for the extreme minumum x coordinate of right eye
+    rightXMAXThreshold = 0.3 #threshold value for the extreme maximum x coordinate of right eye
 
-    leftYThreshold = 0.3028 #threshold value for theshold height of the eye between upper and lower
-    leftYMINThreshold = 0.1 #threshold value for the extreme minimum y height of left eye
-    leftYMAXThreshold = 0.5 #threshold value for the extreme maximum y height of left eye
+    leftYThreshold = 0.297 #threshold value for theshold height of the eye between upper and lower
+    leftYMINThreshold = 0.2 #threshold value for the extreme minimum y height of left eye
+    leftYMAXThreshold = 0.4 #threshold value for the extreme maximum y height of left eye
 
-    rightYThreshold = 0.2955 #threshold value for theshold height of the eye between upper and lower
-    rightYMINThreshold = 0.1 #threshold value for the extreme minimum y height of right eye
-    rightYMAXThreshold = 0.5 #threshold value for the extreme maximum y height of right eye
+    rightYThreshold = 0.297 #threshold value for theshold height of the eye between upper and lower
+    rightYMINThreshold = 0.2 #threshold value for the extreme minimum y height of right eye
+    rightYMAXThreshold = 0.4 #threshold value for the extreme maximum y height of right eye
 
     #function that checks if the value in the spcified column of the CSV is greater than the desired threshold value
     #this will corespond with looking in the left half of the screen
