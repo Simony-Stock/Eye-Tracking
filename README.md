@@ -1,2 +1,2 @@
 # Eye-Tracking
-  ![eye tracking poster presentation image](Team02Poster.pdf)
+  ![eye tracking poster presentationimage](Team02Poster.png)
